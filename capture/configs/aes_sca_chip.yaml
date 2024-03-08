@@ -6,7 +6,7 @@ target:
   baudrate: 115200
   output_len_bytes: 16
   protocol: "ujson"
-  port: "/dev/ttyUSB1"
+  port: "/dev/serial/by-id/usb-Google_LLC_HyperDebug_CMSIS-DAP_206E35883236-if03-port0"
   # Trigger source.
   # hw: Precise, hardware-generated trigger - FPGA only.
   # sw: Fully software-controlled trigger.
