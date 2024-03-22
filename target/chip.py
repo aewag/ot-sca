@@ -2,6 +2,7 @@
 # Licensed under the Apache License, Version 2.0, see LICENSE for details.
 # SPDX-License-Identifier: Apache-2.0
 """OpenTitan chip utility functions."""
+from pathlib import Path
 import time
 from subprocess import PIPE, Popen
 from typing import Optional
@@ -23,6 +24,8 @@ class Chip():
     def _initialize_chip(self):
         """Initializes the chip."""
         # Flash the chip using the opentitantool with the provided firmware.
+        if not Path(self.firmware).is_file():
+            raise ValueError(f"Firmwale file not found at {self.firmware}")
         if self.usb_serial is not None and self.usb_serial != "":
             flash_process = Popen([self.opentitantool,
                                    "--usb-serial=" + str(self.usb_serial),
