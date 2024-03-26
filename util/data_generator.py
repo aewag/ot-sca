@@ -4,6 +4,7 @@
 
 from Crypto.Cipher import AES
 from Crypto.Hash import KMAC128, SHA3_256
+import random
 
 """Data generator.
 
@@ -139,10 +140,39 @@ class data_generator():
         self.advance_random()
         return pt, ct, key
 
+    def get_ibex_random(self):
+        """
+        For a full random test
+        data_batch_1 = [A, B, C, D, E, F, G, H]
+        :return:
+        """
+        data = []
+        for i in range(0, 8):
+            data.append(random.randint(0, pow(2, 31)))  # 31 bit random value!
+        return data
+
+    def get_ibex_fvsr_vector(self, fixed_value:  int):
+        """
+        For a fix vs random ttest
+        data_batch_1 = [A, B1, A, B2, A, B3, A, B4]_1
+        data_batch_2 = [A, B5, A, B6, A, B....]_2
+        The vector stays constant within a batch.
+        :return:
+        """
+        assert isinstance(fixed_value, int)  # prevent from appending lists
+
+        data = []
+        for i in range(0, 8):
+            if i % 2 == 0:
+                data.append(fixed_value)
+            else:
+                data.append(random.randint(0, 0xFFFFFFFF))
+        return data
 
 # ----------------------------------------------------------------------
 # Create one instance, and export its methods as module-level functions.
 # The functions share state across all uses.
+
 
 _inst = data_generator()
 set_start = _inst.set_start
@@ -152,3 +182,5 @@ get_kmac_fixed = _inst.get_kmac_fixed
 get_kmac_random = _inst.get_kmac_random
 get_sha3_fixed = _inst.get_sha3_fixed
 get_sha3_random = _inst.get_sha3_random
+get_ibex_fixed_vs_rand = _inst.get_ibex_fvsr_vector
+get_ibex_random = _inst.get_ibex_random
