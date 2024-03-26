@@ -39,9 +39,11 @@ class OTIbex:
                 read_counter += 1
         raise Exception("Acknowledge error: Device and host not in sync")
 
-    def init(self):
+    def init(self, fpga_mode_bit: int):
         """ Initializes the Ibex SCA tests on the target.
         """
+        if fpga_mode_bit == 1:
+            raise NotImplementedError("fpga_mode bit not implemented for sca_ibex_commands")
         # IbexSca command.
         self._ujson_ibex_sca_cmd()
         # Init the Ibex SCA tests.
