@@ -26,7 +26,7 @@ class TargetConfig:
     force_program_bitstream: Optional[bool] = False
     baudrate: Optional[int] = None
     port: Optional[str] = None
-    read_timeout: Optional[int] = 1
+    read_timeout: Optional[float] = 1
     usb_serial: Optional[str] = None
 
 
