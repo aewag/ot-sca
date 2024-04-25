@@ -83,9 +83,9 @@ class Target:
             raise RuntimeError("Error: Communication protocol not supported!")
         return com_interface
 
-    def reset_target(self, com_reset: Optional[bool] = False):
+    def reset_target(self, com_reset: Optional[bool] = False, boot_delay: Optional[int] = 1):
         """Resets the target. """
-        self.target.reset_target()
+        self.target.reset_target(boot_delay=boot_delay)
         if com_reset and self.target_cfg.protocol == "ujson":
             self.com_interface = self._init_communication()
 
