@@ -7,14 +7,17 @@ import time
 from typing import Optional
 
 
+from target.communication.otfi_test import OTFITest
+
+
 class OTFI:
     TESTS = []
-    IP = ["Ibex", "Otbn", "Crypto"]
+    IP = ["Ibex", "Otbn", "Crypto", "Rng"]
     def __init__(self, target, ip) -> None:
         self.target = target
         self.ip = ip
 
-        assert self.ip in OTFI.IP, "ip ({self.ip} not in OTFI.IP ({OTFI.IP})"
+        assert self.ip in OTFI.IP, f"ip ({self.ip} not in OTFI.IP ({OTFI.IP})"
 
     def _ujson_fi_cmd(self) -> None:
         time.sleep(0.01)
@@ -34,7 +37,7 @@ class OTFI:
         # Read back device ID from device.
         return self.read_response(max_tries=30)
 
-    def start_test(self, cfg: dict) -> None:
+    def start_test(self, cfg: Optional[dict] = {}, testname: Optional[str] = "") -> None:
         """ Start the selected test.
 
         Call the function selected in the config file. Uses the getattr()
@@ -43,8 +46,12 @@ class OTFI:
         Args:
             cfg: Config dict containing the selected test.
         """
-        test = getattr(self, cfg["test"]["which_test"])
-        self._run_test(test)
+        if cfg != {}:
+            testname = cfg["test"]["which_test"]
+        tests = [test for test in self.TESTS if test.name == testname]
+        assert not len(tests) == 0, f"{testname} not found in {self.TESTS}"
+        assert len(tests) == 1, f"Test duplicates with name {testname}"
+        self._run_test(tests[0])
 
     def _run_test(self, test: OTFITest) -> None:
         # OTFIx Fi command.
