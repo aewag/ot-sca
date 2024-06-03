@@ -8,6 +8,7 @@ from typing import Optional
 
 
 class OTFI:
+    TESTS = []
     IP = ["Ibex", "Otbn", "Crypto"]
     def __init__(self, target, ip) -> None:
         self.target = target
@@ -42,8 +43,20 @@ class OTFI:
         Args:
             cfg: Config dict containing the selected test.
         """
-        test_function = getattr(self, cfg["test"]["which_test"])
-        test_function()
+        test = getattr(self, cfg["test"]["which_test"])
+        self._run_test(test)
+
+    def _run_test(self, test: OTFITest) -> None:
+        # OTFIx Fi command.
+        self._ujson_fi_cmd()
+        # Test command.
+        time.sleep(0.01)
+        self.target.write(json.dumps(test.cmd).encode("ascii"))
+        # Test mode.
+        if test.mode is not None:
+            time.sleep(0.01)
+            self.target.write(json.dumps(test.mode).encode("ascii"))
+
 
     def read_response(self, max_tries: Optional[int] = 1) -> str:
         """ Read response from Crypto FI framework.
