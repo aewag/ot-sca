@@ -10,8 +10,8 @@ import time
 from typing import Optional
 
 
-from otfi import OTFI
-from otfi_test import OTFITest
+from target.communication.otfi import OTFI
+from target.communication.otfi_test import OTFITest
 
 
 class OTFIOtbn(OTFI):
